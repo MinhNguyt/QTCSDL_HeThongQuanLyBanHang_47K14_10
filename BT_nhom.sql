@@ -176,7 +176,7 @@ BEGIN
 END
 -- mã hóa mật khẩu
 UPDATE TAIKHOAN 
-SET MatKhau= CONVERT(varchar(10),HASHBYTES('SHA2_256',MatKhau),1)
+SET MatKhau= '45678' where TenTK ='TK02'
 
 select * from TAIKHOAN
 --- PROC
@@ -185,11 +185,17 @@ CREATE or alter PROC USP_DANGNHAP -- đăng nhập
 @tenTk varchar(4), @matkhau varchar(10)
 as
 begin 
-	set @matkhau = convert(varchar(10), hashbytes('SHA2_256', @matkhau),1);
+	SET @matkhau = CONVERT(varchar(10), HASHBYTES('SHA2_256', @matkhau), 1);
+	print @matkhau
 	SELECT * FROM dbo.TAIKHOAN where TenTK =@tenTk and MatKhau = @matkhau
 end
 go
 
+exec USP_DANGNHAP 'TK01','12345'
+select * from TAIKHOAN
+
+declare @matkhau varchar(10) = CONVERT(varchar(10), HASHBYTES('SHA2_256','12345'), 1);
+print @matkhau
 --Thêm bàn
 create or alter PROC USP_LayDSBan
 AS 
